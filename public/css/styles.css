@@ -1,6 +1,144 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* Reset básico */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Header */
+h1.home-header {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  text-align: center;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 800px;
+}
+
+.hero-img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.call-to-action {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.call-to-action h2 {
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.call-to-action ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.call-to-action li {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.call-to-action button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin-top: 10px;
+}
+
+.call-to-action button img {
+  width: 120px;
+}
+
+/* Reviews Section */
+.reviews {
+  width: 90%;
+  max-width: 600px;
+  margin: 30px auto;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.reviews h2 {
+  text-align: center;
+  color: #333;
+}
+
+.reviews ul {
+  padding-left: 20px;
+  line-height: 1.5;
+}
+
+/* Upgrades Section */
+.upgrades {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.upgrades h2 {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.upgrade-img {
+  background-color: #4c96d7;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upgrade-img img {
+  width: 60px;
+  height: auto;
+}
+
+.upgrades a {
+  display: block;
+  margin-top: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .hero {
+    width: 80%;
+  }
+
+  .call-to-action {
+    top: 20%;
+    left: 15%;
+    padding: 20px;
+  }
+
+  .upgrades {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
