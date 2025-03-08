@@ -10,7 +10,7 @@ const flash = require("connect-flash")
  * Middleware
  *************************/
 app.use(session({
-  secret: process.env.SESSION_SECRET || "secret", // Define un secreto para la sesión
+  secret: process.env.SESSION_SECRET || "secret",
   resave: false,
   saveUninitialized: true
 }))
@@ -22,7 +22,7 @@ app.use(function(req, res, next){
   next()
 })
 
-// Servir archivos estáticos correctamente
+// Achivos estáticos
 app.use(express.static("public"))
 
 /* ***********************
