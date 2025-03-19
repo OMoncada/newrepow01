@@ -245,4 +245,4 @@ WHERE inv_make = 'GM'
 -- Query 6
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
-    inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+    >> >> >> > 5ffda96ebaf351d4cbaedc9bec6fe008737a1bc5 inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
