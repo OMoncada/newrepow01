@@ -1,5 +1,10 @@
+/* ***********************
+ * Require Statements
+ *************************/
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
+const baseController = require("./controllers/baseController")
+const utilities = require("./utilities/index")
 const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
@@ -22,7 +27,7 @@ app.use(function(req, res, next){
   next()
 })
 
-// Achivos estáticos
+// Archivos estáticos
 app.use(express.static("public"))
 
 /* ***********************
@@ -36,6 +41,10 @@ app.use(static)
 /* ***********************
  * Routes
  *************************/
+
+//Index route
+app.get("/", utilities.handleErrors(baseController.buildHome))
+
 app.get("/", function(req, res){ 
   res.render("index", {title: "Home"})
 })
