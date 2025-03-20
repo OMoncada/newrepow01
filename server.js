@@ -53,6 +53,11 @@ app.get("/", function(req, res){
 // Inventory routes
 app.use("/inv", inventoryRoute);
 
+// File Not Found Route - must be last route in list
+app.use(async (req, res, next) => {
+  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
+})
+
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
@@ -66,3 +71,17 @@ const host = process.env.HOST || "localhost"
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
+
+/* ***********************
+* Express Error Handler
+* Place after all other middleware
+*************************/
+app.use(async (err, req, res, next) => {
+  let nav = await utilities.getNav();  // Obtener la barra de navegación
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);  // Imprimir error en consola
+  res.render("errors/error", {  // Renderizar la vista de error
+    title: err.status || 'Server Error',
+    message: err.message,
+    nav
+  });
+});
