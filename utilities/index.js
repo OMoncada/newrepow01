@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
+require("dotenv").config()
 
 /* ************************
  * Constructs the nav HTML unordered list
