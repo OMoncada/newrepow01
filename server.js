@@ -11,6 +11,8 @@ const app = express()
 const static = require("./routes/static")
 const session = require("express-session")
 const flash = require("connect-flash")
+const errorRoute = require("./routes/errorRoute")
+
 
 /* ***********************
  * Middleware
@@ -52,6 +54,9 @@ app.get("/", function(req, res){
 
 // Inventory routes
 app.use("/inv", inventoryRoute);
+
+// Error testing route
+app.use("/error", errorRoute)
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {

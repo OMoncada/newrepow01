@@ -58,6 +58,25 @@ Util.buildClassificationGrid = async function(data){
   return grid;
 };
 
+Util.buildCarDetails = async function(data) {
+  let details 
+    if (data.length > 0) {
+      details = '<div id="vehicle-details">'
+      const vehicle = data[0]
+      details += '<h1>' + vehicle.inv_year + ' ' + vehicle.inv_make + ' ' + vehicle.inv_model + '</h1>'
+      details += '<img src="' + vehicle.inv_image + '" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model + ' on CSE Motors">'
+      details += '<div class="vehicle-summary">'
+      details += '<h2>' + vehicle.inv_make + ' ' + vehicle.inv_model + ' Details</h2>'
+      details += '<p><strong>Price: </strong><span>$' + new Intl.NumberFormat("en-US").format(vehicle.inv_price) + '</span></p>'
+      details += '<p><strong>Description: </strong>' + vehicle.inv_description + '</p>'
+      details += '<p><strong>Color: </strong>' + vehicle.inv_color + '</p>'
+      details += '<p><strong>Miles: </strong><span>' + new Intl.NumberFormat("en-US").format(vehicle.inv_miles) + '</span></p>'
+      details += '</div></div>'
+    } else { 
+      details += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    }
+    return details
+}
 
 /* ****************************************
  * Middleware For Handling Errors
