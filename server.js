@@ -1,27 +1,43 @@
 /* ***********************
  * Require Statements
  *************************/
+const pool = require('./database/')
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/index")
-const inventoryRoute = require("./routes/inventoryRoute");
+const inventoryRoute = require("./routes/inventoryRoute")
 const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
 const session = require("express-session")
 const flash = require("connect-flash")
 const errorRoute = require("./routes/errorRoute")
+const accountRoute = require("./routes/accountRoute")
+const bodyParser = require("body-parser")
+
 
 
 /* ***********************
  * Middleware
  *************************/
 app.use(session({
-  secret: process.env.SESSION_SECRET || "secret",
-  resave: false,
-  saveUninitialized: true
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: 'sessionId',
 }))
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
+// Archivos estáticos
+app.use(express.static("public"))
 
 // Express Messages Middleware
 app.use(flash())
@@ -29,9 +45,6 @@ app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
-
-// Archivos estáticos
-app.use(express.static("public"))
 
 /* ***********************
  * View Engine and Templates
@@ -45,15 +58,13 @@ app.use(static)
  * Routes
  *************************/
 
-//Index route
+// Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
-app.get("/", function(req, res){ 
-  res.render("index", {title: "Home"})
-})
+app.use("/account", accountRoute)
 
 // Inventory routes
-app.use("/inv", inventoryRoute);
+app.use("/inv", inventoryRoute)
 
 // Error testing route
 app.use("/error", errorRoute)
@@ -82,11 +93,11 @@ app.listen(port, () => {
 * Place after all other middleware
 *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();  // Obtener la barra de navegación
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);  // Imprimir error en consola
-  res.render("errors/error", {  // Renderizar la vista de error
+  let nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  res.render("errors/error", {
     title: err.status || 'Server Error',
     message: err.message,
     nav
-  });
-});
+  })
+})
