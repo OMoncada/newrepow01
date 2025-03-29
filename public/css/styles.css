@@ -52,7 +52,7 @@ main {
 
 h1 {
   font-size: 1.15rem;
-  text-align: center;
+  text-align: left;
   margin-top: 1.5rem;
 }
 
@@ -170,16 +170,16 @@ h2 {
 }
 
 #inv-display li {
-  background-color: #fff;
-  padding: 1rem 0.5rem;
+  background-color: white;
+  padding: 1rem;
   margin: 1rem;
   list-style-type: none;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 2px 2px 6px black;
   text-align: center;
-  border-radius: 15px;
-  border: 1px solid #ccc;
-  transition: transform 0.2s ease;
-  font-size: 1.1rem;
+  border-radius: 20px;
+  border: 2px solid gray;
+  width: 250px;
+  font-size: 1rem;
 }
 
 #inv-display hr {
@@ -481,8 +481,21 @@ Register Form
   list-style-type: none;
 }
 
+.management-links a {
+  font-size: 1.4rem;
+  font-weight: bold;
+  display: inline-block;
+  margin: 0.5rem 0;
+}
+
 h1.classification, h1.inventory {
   font-size: 1.5rem;
+}
+
+.new-classification label {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
 }
 
 .new-classification, .new-inventory {
@@ -676,8 +689,24 @@ h1.classification, h1.inventory {
     grid-column: 1/3;
   }
 
+
   #messages {
     display: grid;
     grid-column: 1/3;
+  }
+}
+
+@media (max-width: 799px) {
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .management-links li a {
+    font-size: 1rem; /* Aumenta el tamaño de los links */
+  }
+
+  .management-links li {
+    margin-bottom: 0.75rem; /* Espaciado entre enlaces si quieres */
   }
 }
