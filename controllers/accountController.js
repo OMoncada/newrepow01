@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 const bcrypt = require("bcryptjs")
 const utilities = require("../utilities/index")
 const accountModel = require("../models/account-model")
@@ -101,8 +103,18 @@ async function accountLogin(req, res) {
     const match = await bcrypt.compare(account_password, accountData.account_password)
     if (match) {
       delete accountData.account_password
-      req.session.accountData = accountData
-      res.locals.loggedin = true
+
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: 3600 // 1 hora
+      })
+
+      // Configurar cookie JWT
+      if (process.env.NODE_ENV === "development") {
+        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      } else {
+        res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+      }
+
       return res.redirect("/account")
     } else {
       req.flash("notice", "Invalid password.")
@@ -122,6 +134,7 @@ async function accountLogin(req, res) {
     })
   }
 }
+
 
 /* ****************************************
 *  Process logout

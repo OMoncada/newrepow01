@@ -27,4 +27,11 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 )
 
+// Vista de gestión de cuenta (protegida)
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccountManagement)
+)
+
 module.exports = router

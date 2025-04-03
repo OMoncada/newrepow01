@@ -1,8 +1,38 @@
-<h1>Vehicle Management</h1>
-<%- messages() %>
+<% if (title) { %>
+  <h1 class="management-title"><%= title %></h1>
+  <% } else {
+     res.redirect('/')
+} %>
 
-<ul class="management-links">
-  <li><a href="/inv/add-classification">Add New Classification</a></li>
-  <li><a href="/inv/add-inventory">Add New Inventory</a></li>
-</ul>
+<% if (messages && messages.length > 0) { %>
+   <div class="success">
+     <p><%= messages[0] %></p>
+   </div>
+ <% } %>
 
+<% if (errors) { %>
+  <ul class="notice">
+  <% errors.array().forEach(error => { %>
+     <% if (error.msg !== "Invalid value") { %>
+        <li><%= error.msg %></li>
+     <% } %>
+  <% }) %>
+  </ul>
+<% } %>
+
+<div class="vehicle-management">
+  <ul class="management-links">
+     <li><a href="/inv/add-classification">Add New Classification</a></li>
+     <li><a href="/inv/add-inventory">Add New Inventory</a></li>
+  </ul>
+
+  <h2>Manage Inventory</h2>
+  <p>Select a classification from the list to see the items belonging to the classification.</p>
+
+  <%- classificationSelect %>
+
+  <table id="inventoryDisplay"></table>
+  <noscript>JavaScript must be enabled to use this page.</noscript>
+
+  <script src="../../js/inventory.js"></script>
+</div>
