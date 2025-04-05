@@ -464,12 +464,25 @@ Register Form
 }
 
 .notice {
-  color: rgb(190, 0, 0);
+  background-color: #b6e6b6; 
+  color: #000;               
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
 }
 
-.success {
-  background-color: rgb(150, 201, 150)
+ul.notice, ul.success {
+  list-style: none;
+  padding-left: 0;
 }
+
+ul.success li {
+  background-color: rgb(150, 201, 150);
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
 
 .inventory-form {
   display: flex;
@@ -540,6 +553,60 @@ h1.classification, h1.inventory {
 .edit-account button {
   margin-top: 10px; 
 }
+
+.edit-account {
+  display: flex;
+  flex-direction: column;
+  width: clamp(300px, 90%, 400px);
+  margin-left: 2rem; /* 👈 Esto posiciona el bloque hacia la izquierda */
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.edit-account label {
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+  text-align: left;
+}
+
+.edit-account input[type="text"],
+.edit-account input[type="email"],
+.edit-account input[type="password"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.edit-account small {
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.btn-blue {
+  background-color: #0492C3;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 1rem;
+}
+
+.btn-blue:hover {
+  background-color: #0377a3;
+}
+
 
 .edit-inventory {
   background-color: #0492C3;

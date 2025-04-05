@@ -5,8 +5,8 @@ const utilities = require("../utilities/index")
 const accountModel = require("../models/account-model")
 
 /* ****************************************
-*  Deliver login view
-**************************************** */
+ *  Deliver login view
+ **************************************** */
 async function buildLogin(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/login", {
@@ -17,8 +17,8 @@ async function buildLogin(req, res, next) {
 }
 
 /* ****************************************
-*  Deliver registration view
-**************************************** */
+ *  Deliver registration view
+ **************************************** */
 async function buildRegister(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/register", {
@@ -29,8 +29,8 @@ async function buildRegister(req, res, next) {
 }
 
 /* ****************************************
-*  Deliver account management view
-**************************************** */
+ *  Deliver account management view
+ **************************************** */
 async function buildAccountManagement(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/management", {
@@ -41,8 +41,8 @@ async function buildAccountManagement(req, res, next) {
 }
 
 /* ****************************************
-*  Process registration
-**************************************** */
+ *  Process registration
+ **************************************** */
 async function registerAccount(req, res) {
   let nav = await utilities.getNav()
   const { account_firstname, account_lastname, account_email, account_password } = req.body
@@ -82,8 +82,8 @@ async function registerAccount(req, res) {
 }
 
 /* ****************************************
-*  Process login
-**************************************** */
+ *  Process login
+ **************************************** */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
@@ -105,10 +105,9 @@ async function accountLogin(req, res) {
       delete accountData.account_password
 
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: 3600 // 1 hora
+        expiresIn: 3600
       })
 
-      // Configurar cookie JWT
       if (process.env.NODE_ENV === "development") {
         res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
       } else {
@@ -135,14 +134,102 @@ async function accountLogin(req, res) {
   }
 }
 
+/* ****************************************
+ *  Logout (Task 6)
+ **************************************** */
+function logout(req, res) {
+  res.clearCookie("jwt")
+  res.redirect("/")
+}
 
 /* ****************************************
-*  Process logout
-**************************************** */
-function logout(req, res) {
-  req.session.destroy(() => {
-    res.redirect("/")
+ *  Show update account form
+ **************************************** */
+async function buildUpdateView(req, res) {
+  const account_id = parseInt(req.params.account_id)
+  const accountData = await accountModel.getAccountById(account_id)
+  let nav = await utilities.getNav()
+  res.render("account/update", {
+    title: "Edit Account",
+    nav,
+    errors: null,
+    ...accountData
   })
+}
+
+/* ****************************************
+ *  Process account update (🟢 actualizado)
+ **************************************** */
+async function updateAccount(req, res) {
+  const {
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  } = req.body
+
+  const updateResult = await accountModel.updateAccountData(
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_id
+  )
+
+  const nav = await utilities.getNav()
+
+  if (updateResult) {
+    // 🟢 Obtener info actualizada
+    const updatedAccount = await accountModel.getAccountById(account_id)
+    delete updatedAccount.account_password
+
+    // 🟢 Crear nuevo token
+    const accessToken = jwt.sign(updatedAccount, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 3600
+    })
+
+    // 🟢 Actualizar cookie
+    if (process.env.NODE_ENV === "development") {
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+    } else {
+      res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+    }
+
+    req.flash("notice", "Account information updated successfully.")
+    res.redirect("/account")
+  } else {
+    req.flash("notice", "Sorry, the update failed.")
+    res.status(501).render("account/update", {
+      title: "Edit Account",
+      nav,
+      errors: null,
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    })
+  }
+}
+
+/* ****************************************
+ *  Process password update
+ **************************************** */
+async function updatePassword(req, res) {
+  const { account_id, account_password } = req.body
+  const hashedPassword = await bcrypt.hash(account_password, 10)
+  const updateResult = await accountModel.updatePassword(hashedPassword, account_id)
+  const nav = await utilities.getNav()
+
+  if (updateResult) {
+    req.flash("notice", "Password updated successfully.")
+    res.redirect("/account")
+  } else {
+    req.flash("notice", "Password update failed.")
+    res.status(501).render("account/update", {
+      title: "Edit Account",
+      nav,
+      errors: null
+    })
+  }
 }
 
 module.exports = {
@@ -151,5 +238,8 @@ module.exports = {
   buildAccountManagement,
   registerAccount,
   accountLogin,
-  logout
+  logout,
+  buildUpdateView,
+  updateAccount,
+  updatePassword
 }

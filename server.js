@@ -17,10 +17,14 @@ const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 
-
 /* ***********************
  * Middleware
  *************************/
+app.use(cookieParser())
+
+// ✅ JWT middleware se aplica ANTES de todo
+app.use(utilities.checkJWTToken)
+
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -35,7 +39,6 @@ app.use(session({
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-
 // Archivos estáticos
 app.use(express.static("public"))
 
@@ -45,9 +48,6 @@ app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
-
-app.use(cookieParser())
-app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates

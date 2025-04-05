@@ -1,37 +1,59 @@
 const express = require("express")
 const router = new express.Router()
 const utilities = require("../utilities/index")
-const regValidate = require('../utilities/account-validation')
-const loginValidate = require('../utilities/account-validation')
+const accountValidate = require('../utilities/account-validation')
 const accountController = require("../controllers/accountController")
 
-// Mostrar vista de login
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
-
-// Mostrar vista de registro
 router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
-// Procesar registro
 router.post(
   "/register",
-  regValidate.registrationRules(),
-  regValidate.checkRegData,
+  accountValidate.registrationRules(),
+  accountValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 )
 
-// Procesar intento de login
 router.post(
   "/login",
-  loginValidate.loginRules(),
-  loginValidate.checkLoginData,
+  accountValidate.loginRules(),
+  accountValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin)
 )
 
-// Vista de gestión de cuenta (protegida)
 router.get(
   "/",
   utilities.checkLogin,
   utilities.handleErrors(accountController.buildAccountManagement)
+)
+
+// Mostrar formulario para actualizar datos
+router.get("/update/:account_id",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildUpdateView)
+)
+
+// Procesar actualización de datos
+router.post("/update-account",
+  accountValidate.updateRules(),
+  accountValidate.checkUpdateData,
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+// Procesar cambio de contraseña
+router.post("/update-password",
+  accountValidate.updatePasswordRules(),
+  accountValidate.checkPasswordUpdate,
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.updatePassword)
+)
+
+// Logout
+router.get(
+  "/logout",
+  utilities.checkLogin,
+  accountController.logout
 )
 
 module.exports = router
