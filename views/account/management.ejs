@@ -8,7 +8,6 @@
   <div class="success">✔️ Password updated successfully.</div>
 <% } %>
 
-
 <div class="account-management-wrapper">
   <% if (errors) { %>
     <ul class="notice">
@@ -24,10 +23,48 @@
     <h2 class="account-welcome">Welcome <%= accountData.account_firstname %></h2>
     <p class="logged-in-msg">You're logged in.</p>
     <p><a href="/account/update/<%= accountData.account_id %>">Edit Account Information</a></p>
+    <hr class="full-width-line">
   <% } %>
 
   <% if (accountData && (accountData.account_type === "Employee" || accountData.account_type === "Admin")) { %>
     <h3>Inventory Management</h3>
     <p><a href="/inv">Manage Inventory</a></p>
   <% } %>
+
+  <hr class="full-width-line">
+  <h2>Manage Reviews</h2>
+
+  <div class="reviews-info">
+    <% if (reviews && reviews.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Reviews Information</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% reviews.forEach(review => { %>
+            <tr>
+              <td>
+                <%= review.inv_make %> <%= review.inv_model %> (Reviewed on 
+                <%= new Date(review.review_date).toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric'
+                }) %>)
+              </td>
+              <td class="review-actions">
+                <a href="/review/edit/<%= review.review_id %>">Edit</a>
+                &nbsp;
+                <a href="/review/delete/<%= review.review_id %>">Delete</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>You haven't submitted any reviews yet.</p>
+    <% } %>
+  </div>
 </div>

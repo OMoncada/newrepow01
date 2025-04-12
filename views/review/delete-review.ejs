@@ -1,0 +1,40 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+
+  <%- messages() %>
+
+  <% if (errors) { %>
+     <ul class="notice">
+     <% errors.array().forEach(error => { %>
+        <% if (error.msg !== "Invalid value") { %>
+           <li><%= error.msg %></li>
+        <% } %>
+     <% }) %>
+     </ul>
+  <% } %>
+
+  <form class="delete-review-form" action="/review/delete" method="post">
+   <p>
+      <span class="blue-bold">Confirm Review Deletion.</span>
+      <span class="blue-italic"> The delete</span>
+      <span class="red-bold"> is permanent. ❗</span>
+    </p>
+    
+     <div class="form-content">
+        <label for="review_date"><strong>Reviewed on</strong></label>
+        <input type="text" id="review_date" name="review_date" required readonly value="<%= locals.review_date %>"><br>
+
+        <br><label for="delete_review_text">Review Text</label>
+        <textarea id="delete_review_text" name="review_text" required readonly><%= locals.review_text %></textarea><br>
+
+        <button type="submit">Delete</button>
+
+        <input type="hidden" name="review_id" value="<%= review_id %>">
+        <input type="hidden" name="inv_id" value="<%= inv_id %>">
+        <input type="hidden" name="account_id" value="<%= account_id %>">
+     </div>
+  </form>
+
+<% } else {
+  res.redirect('/')
+} %>

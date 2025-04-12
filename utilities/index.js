@@ -171,4 +171,22 @@ Util.checkLogin = (req, res, next) => {
   }
 }
 
+Util.buildReviewsList = function (reviews) {
+  if (!reviews || reviews.length === 0) {
+    return "<p class='no-reviews'>There are no reviews yet.</p>"
+  }
+
+  let list = '<ul class="review-list">'
+  reviews.forEach(review => {
+    list += `<li>
+      <strong>${review.account_firstname} ${review.account_lastname}</strong> commented on ${new Date(review.review_date).toLocaleDateString('en-GB', {
+        day: '2-digit', month: 'long', year: 'numeric'
+      })}:<br>
+      <p class="review-text">${review.review_text}</p>
+    </li>`
+  })
+  list += '</ul>'
+  return list
+}
+
 module.exports = Util

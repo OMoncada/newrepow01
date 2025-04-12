@@ -1,0 +1,28 @@
+<% if (title) { %>
+    <h1 class="account-title"><%= title %></h1>
+  <% } else { %>
+    <%- res.redirect("/") %>
+  <% } %>
+  
+  <%- messages() %>
+  
+  <% if (errors) { %>
+    <ul class="notice">
+      <% errors.array().forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+  
+  <div class="edit-account">
+    <form action="/review/add" method="post">
+      <label for="review_text">Your Review</label>
+      <textarea id="review_text" name="review_text" required rows="5" maxlength="500"></textarea>
+  
+      <input type="hidden" name="inv_id" value="<%= inv_id %>">
+      <input type="hidden" name="account_id" value="<%= account_id %>">
+  
+      <button type="submit" class="btn-blue">Submit Review</button>
+    </form>
+  </div>
+  

@@ -19,19 +19,39 @@ invCont.buildByClassificationId = async function (req, res, next) {
 }
 
 /* Build car details view */
+/* Build car details view */
 invCont.buildCarDetailsById = async function (req, res, next) {
    const inv_id = req.params.invId
    const data = await invModel.getCarDetailsById(inv_id)
    const details = await utilities.buildCarDetails(data)
-   let nav = await utilities.getNav()
+   const nav = await utilities.getNav()
    const vehicleName = data[0].inv_make + ' ' + data[0].inv_model
+ 
+   const reviewModel = require("../models/review-model")
+   const reviews = await reviewModel.getReviewsByVehicleId(inv_id)
+   const reviewList = utilities.buildReviewsList(reviews)
+ 
+   // 👇 Preparamos el screenName y el account_id si el usuario está logueado
+   const accountData = res.locals.accountData
+   const screenName = accountData
+     ? accountData.account_firstname.charAt(0) + accountData.account_lastname
+     : null
+   const account_id = accountData?.account_id
+ 
    res.render("./inventory/details", {
-      title: vehicleName + " Details",
-      nav, 
-      details,
-      errors: null,
+     title: vehicleName + " Details",
+     nav,
+     details,
+     reviewList,
+     reviews, // 👈 NECESARIO para el if en EJS
+     vehicle: data[0],
+     screenName,
+     account_id,
+     loggedin: res.locals.loggedin,
+     errors: null
    })
-}
+ }
+ 
 
 /* Build management view */
 invCont.buildManagement = async function(req, res) {
@@ -74,7 +94,7 @@ invCont.addClassification = async function(req, res) {
 /* Build add inventory view */
 invCont.buildAddInventory = async function (req, res, next) {
    let nav = await utilities.getNav()
-   let classificationList = await utilities.buildClassificationList(req.body.classification_id)
+   let classificationList = await utilities.buildClassificationList() // ✅ SIN parámetro
    res.render("./inventory/add-inventory", {
       title: 'Add New Inventory',
       nav,

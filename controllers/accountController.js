@@ -32,13 +32,23 @@ async function buildRegister(req, res, next) {
  *  Deliver account management view
  **************************************** */
 async function buildAccountManagement(req, res, next) {
-  let nav = await utilities.getNav()
+  const nav = await utilities.getNav()
+  const accountData = res.locals.accountData
+  const account_id = accountData.account_id
+
+  const reviewModel = require("../models/review-model")
+  const reviews = await reviewModel.getReviewsByAccountId(account_id)
+
   res.render("account/management", {
     title: "Account Management",
     nav,
+    accountData,
+    reviews,
+    loggedin: true,
     errors: null,
   })
 }
+
 
 /* ****************************************
  *  Process registration
